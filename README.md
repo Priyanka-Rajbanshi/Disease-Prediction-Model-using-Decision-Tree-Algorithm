@@ -1,7 +1,6 @@
-# Innovative Healthcare
+# Healthcare
 
 Patient prescription creation and storing medical history using Postgresql, Django and Bootstrap
-Github: https://github.com/Its-Puja-Singh/HackathonBackend
 
 ## Prerequisites
 * Install Python3 and Django and PostgreSQL
