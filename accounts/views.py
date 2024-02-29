@@ -183,12 +183,97 @@ def patientRecord(request):
 # def pred(request):
 #     return render(request, 'pred.html')
 
+# def pred(request):
+#     selected_symptoms_str = request.GET.get('selectedSymptoms')
+#     selected_symptoms = []
+#     if selected_symptoms_str:
+#         selected_symptoms = json.loads(selected_symptoms_str)
+    
+
+#     # Render the 'pred.html' template and pass the selectedSymptoms as context
+#     return render(request, 'pred.html', {'selectedSymptoms': selected_symptoms})
+
+
+import os
+import pickle
+import numpy as np
+
 def pred(request):
-    selected_symptoms_json = request.GET.get('selectedSymptoms')
-    selected_symptoms = json.loads(selected_symptoms_json) if selected_symptoms_json else []
-    context = {
-        'selectedSymptoms': selected_symptoms,
-    }
-    print("inside pred function: ", selected_symptoms)
-    return render(request, 'pred.html', context)
+    # Create an array with 132 items
+    headsym = ['itching', 'skin_rash', 'nodal_skin_eruptions',
+        'continuous_sneezing', 'shivering', 'chills', 'joint_pain',
+        'stomach_pain', 'acidity', 'ulcers_on_tongue', 'muscle_wasting',
+        'vomiting', 'burning_micturition', 'spotting_ urination',
+        'fatigue', 'weight_gain', 'anxiety', 'cold_hands_and_feets',
+        'mood_swings', 'weight_loss', 'restlessness', 'lethargy',
+        'patches_in_throat', 'irregular_sugar_level', 'cough',
+        'high_fever', 'sunken_eyes', 'breathlessness', 'sweating',
+        'dehydration', 'indigestion', 'headache', 'yellowish_skin',
+        'dark_urine', 'nausea', 'loss_of_appetite', 'pain_behind_the_eyes',
+        'back_pain', 'constipation', 'abdominal_pain', 'diarrhoea',
+        'mild_fever', 'yellow_urine', 'yellowing_of_eyes',
+        'acute_liver_failure', 'fluid_overload', 'swelling_of_stomach',
+        'swelled_lymph_nodes', 'malaise', 'blurred_and_distorted_vision',
+        'phlegm', 'throat_irritation', 'redness_of_eyes', 'sinus_pressure',
+        'runny_nose', 'congestion', 'chest_pain', 'weakness_in_limbs',
+        'fast_heart_rate', 'pain_during_bowel_movements',
+        'pain_in_anal_region', 'bloody_stool', 'irritation_in_anus',
+        'neck_pain', 'dizziness', 'cramps', 'bruising', 'obesity',
+        'swollen_legs', 'swollen_blood_vessels', 'puffy_face_and_eyes',
+        'enlarged_thyroid', 'brittle_nails', 'swollen_extremeties',
+        'excessive_hunger', 'extra_marital_contacts',
+        'drying_and_tingling_lips', 'slurred_speech', 'knee_pain',
+        'hip_joint_pain', 'muscle_weakness', 'stiff_neck',
+        'swelling_joints', 'movement_stiffness', 'spinning_movements',
+        'loss_of_balance', 'unsteadiness', 'weakness_of_one_body_side',
+        'loss_of_smell', 'bladder_discomfort', 'foul_smell_of urine',
+        'continuous_feel_of_urine', 'passage_of_gases', 'internal_itching',
+        'toxic_look_(typhos)', 'depression', 'irritability', 'muscle_pain',
+        'altered_sensorium', 'red_spots_over_body', 'belly_pain',
+        'abnormal_menstruation', 'dischromic _patches',
+        'watering_from_eyes', 'increased_appetite', 'polyuria',
+        'family_history', 'mucoid_sputum', 'rusty_sputum',
+        'lack_of_concentration', 'visual_disturbances',
+        'receiving_blood_transfusion', 'receiving_unsterile_injections',
+        'coma', 'stomach_bleeding', 'distention_of_abdomen',
+        'history_of_alcohol_consumption', 'fluid_overload.1',
+        'blood_in_sputum', 'prominent_veins_on_calf', 'palpitations',
+        'painful_walking', 'pus_filled_pimples', 'blackheads', 'scurring',
+        'skin_peeling', 'silver_like_dusting', 'small_dents_in_nails',
+        'inflammatory_nails', 'blister', 'red_sore_around_nose',
+        'yellow_crust_ooze']
+
+    # Get the selected symptoms from the request
+    selected_symptoms_str = request.GET.get('selectedSymptoms')
+    selected_symptoms = []
+    if selected_symptoms_str:
+        selected_symptoms = json.loads(selected_symptoms_str)
+
+    # Compare headsym with selected_symptoms array to create new_array_for_model
+    new_array_for_model = [1 if symptom in selected_symptoms else 0 for symptom in headsym]
+
+    # Load the saved model
+    model_path = os.path.join('/Users/priyankarajbanshi/Documents/new_directory_name/HackathonBackend-main', 'model.pkl')
+    try:
+        with open(model_path, 'rb') as file:
+            model = pickle.load(file)
+        print("Model loaded successfully.")
+    except FileNotFoundError:
+        model = None
+        print("Model not loaded.")
+
+    # Ensure there are 132 values in new_array_for_model
+    if len(new_array_for_model) != 132:
+        print("Error: new_array_for_model should have 132 values.")
+        return HttpResponse("Error: new_array_for_model should have 132 values. ", status=500)
+
+    else:
+    # Convert the new_array_for_model into a numpy array
+        new_array_for_model = np.array(new_array_for_model).reshape(1, -1)
+
+    # Make a prediction using the loaded model
+        prediction = model.predict(new_array_for_model)[0]
+
+    # Render the 'pred.html' template and pass the selected symptoms, predicted disease, and headsym array as context
+        return render(request, 'pred.html', {'selectedSymptoms': selected_symptoms, 'predictedDisease': prediction, 'headsym': headsym})
 
