@@ -180,6 +180,31 @@ def newpatient(request):
 def patientRecord(request):
     return render(request, 'patientRecord.html')
 
+def viewPatientRecord(request):
+    return render(request, 'viewPatientRecord.html')
+def OldviewPatientRecord(request):
+    return render(request, 'OldviewPatientRecord.html')
+def updatePatientRecord(request):
+    return render(request, 'updatePatientRecord.html')
+
+def choise(request):
+    return render(request, 'choise.html')
+
+def diagnosisPage(request):
+    return render(request, 'diagnosisPage.html')
+
+def diagnosisDescription(request):
+    return render(request, 'diagnosisDescription.html')
+    
+def viewMedicine(request):
+    return render(request, 'viewMedicine.html')
+
+def labTest(request):
+    return render(request, 'labTest.html')
+
+def medicationPage(request):
+    return render(request, 'medicationPage.html')
+
 # def pred(request):
 #     return render(request, 'pred.html')
 

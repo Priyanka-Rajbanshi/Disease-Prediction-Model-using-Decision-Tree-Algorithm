@@ -47,9 +47,17 @@
             <br>
             <p> priyanka</p>
             <a href="{% url 'patientRecord' %}" class="btn"> Patient record <span class="fas fa-chevron-right"></span> </a>
+            <a href="{% url 'viewPatientRecord' %}" class="btn"> View Patient record <span class="fas fa-chevron-right"></span> </a>
+            <a href="{% url 'OldviewPatientRecord' %}" class="btn"> Old View Patient record <span class="fas fa-chevron-right"></span> </a>
+            <a href="{% url 'updatePatientRecord' %}" class="btn"> Update Patient record <span class="fas fa-chevron-right"></span> </a>
             <a href="{% url 'newpatient' %}" class="btn"> New Patients <span class="fas fa-chevron-right"></span> </a>
             <!-- <a href="/doctor/patient-list/" class="btn"> View Patients <span class="fas fa-chevron-right"></span> </a> -->
             <a href="{% url 'patientlist' %}" class="btn"> View Patients <span class="fas fa-chevron-right"></span> </a>
+            <a href="{% url 'diagnosisPage' %}" class="btn"> Diagnosis Page <span class="fas fa-chevron-right"></span> </a>
+            <a href="{% url 'diagnosisDescription' %}" class="btn"> Diagnosis Description <span class="fas fa-chevron-right"></span> </a>
+            <a href="{% url 'labTest' %}" class="btn"> Lab Test  <span class="fas fa-chevron-right"></span> </a>
+            <a href="{% url 'medicationPage' %}" class="btn"> Medication Page  <span class="fas fa-chevron-right"></span> </a>
+            <a href="{% url 'viewMedicine' %}" class="btn"> view Medicine  <span class="fas fa-chevron-right"></span> </a>
             {% if request.session.role == "Nurse" %}
                 <a href="/healthcare/newPatient" class="btn"> Register Patient <span class="fas fa-chevron-right"></span> </a>
             {% endif %}

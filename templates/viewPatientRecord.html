@@ -210,6 +210,11 @@
                         <td width="2%">:</td>
                         <td>{{history.status}}</td>
                       </tr>
+                      <tr>
+                        <th width="30%">Symptoms</th>
+                        <td width="2%">:</td>
+                        <td>{{history.symptoms}}</td>
+                      </tr>
                     </table>
                   </div>
             </div>
@@ -249,6 +254,43 @@
 
                   </div>
             </div>
+            <!-- edit button -->
+            <div id="Prescriptions" data-tab-content>
+              <h1>Prescriptions ss
+                  {% if request.session.role == "Doctor" %}
+              <a href="/doctor/diagnosis/{{details.id}}" class="btn btn-info btm-sm" style ="background-color:#2f92ad; color:white; float:right; margin-top:5px; margin-right:5px;">Add Prescription</a>
+              {% endif %}
+              </h1>
+              
+              <div class="card-body pt-0" id="table3">
+                  {% if prescriptionList %}
+                  <table class="table table-light table-bordered">
+                    <thead>
+                      <tr>
+                        <th scope="col">Diagnosis Date</th>
+                        <th scope="col">Diagnosis Name</th>
+                        <th scope="col"></th>
+                      </tr>
+                    </thead>
+                    {% if prescriptionList %}
+                            {% for data in prescriptionList %}
+                            <tr>
+                              <td>{{data.diagnosisCreatedDate}}</td>
+                              <td>{{data.diagnosisName}}</td>
+                                <td>
+                                    <a href="/doctor/viewPrescription/{{data.prescriptionId}}" class="btn btn-info btm-sm" style="background-color: #2f92ad; color:white; ">View Diagnosis</a>
+                                    <a href="/doctor/medicineFile/{{data.prescriptionId}}" class="btn btn-info btm-sm" style="background-color: #2f92ad; color:white; ">Download Prescriptions</a>
+                                </td>
+                    </tr>
+                        
+                         {% endfor %}
+                        {% endif %}
+                </table>
+                  {% endif %}
+                  
+
+                </div>
+          </div>
         </div>
        </div>
         
