@@ -55,5 +55,3 @@ class MedicineDirPrescriptionMap(models.Model):
 class LabTestPrescriptionMap(models.Model):
     laboratoryTestId = models.ForeignKey(LaboratoryTest, on_delete=models.CASCADE)
     prescriptionId = models.ForeignKey(Prescription, on_delete=models.CASCADE)
-
-   

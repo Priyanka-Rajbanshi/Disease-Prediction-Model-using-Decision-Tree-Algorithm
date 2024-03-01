@@ -132,6 +132,9 @@ from .forms import CustomUserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
 from django.urls import reverse
+from django.contrib.auth.hashers import make_password
+from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import user_passes_test
 
 def login_view(request):
     if request.method == 'POST':
@@ -146,14 +149,18 @@ def login_view(request):
                 return redirect('home')  # Redirect to dashboard if preferences exist
     return render(request, 'login.html')
 
+CustomUser = get_user_model()
+
+@user_passes_test(lambda u: u.user_type == 'admin')  # Ensure only users with user_type 'admin' can access this view
 def register(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-            user = form.save(commit=False)  # Save the form data without committing to the database yet
-            user.password = make_password(form.cleaned_data['password'])  # Explicitly hash the password
-            user.save()  # Now save the user with the hashed password
-            return redirect('login') 
+            user = form.save(commit=False)
+            user.password = make_password(form.cleaned_data['password'])
+            user.user_type = 'doctor'  # Set user type to 'doctor'
+            user.save()
+            return redirect('login')
     else:
         form = CustomUserCreationForm()
     return render(request, 'ragister.html', {'form': form})

@@ -272,11 +272,13 @@ footer a {
 <body>
   <div class="container" id="container">
     <div class="form-container sign-in-container">
-      <form action="/registrationNoSubmit" method="post">{% csrf_token %}
+		<form method="post" action="{% url 'patient_detail' %}">
+
+			{% csrf_token %}
         <h1>View Report</h1>
       </br>
          </br>
-        <input type='text' placeholder="Enter the Registration ID" name='registerId'>
+         {{ form.registration_number }}
         </br>
         <button type="submit" class="button-color">Get Report</button></br>
       </form>

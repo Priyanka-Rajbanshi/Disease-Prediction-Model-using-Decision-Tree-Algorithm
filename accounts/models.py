@@ -42,7 +42,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         ('patient', 'patient'),
         ('doctor', 'Doctor'),
     )
-    username = models.CharField(unique=True, max_length=50)
+    username = models.CharField(max_length=50)
     user_type = models.CharField(max_length=10, choices=USER_TYPES)
     full_name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)

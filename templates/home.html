@@ -175,7 +175,8 @@
                 <a href="/healthcare/newPatient" class="btn btn-primary btn-lg zoomOut" id="button1">Register Patient</a>
             {% endif %}
            {% else %}
-           <a href="/registrationNo" class="btn btn-primary btn-lg zoomOut" id="button1">View Prescriptions </a>
+           
+           <a href="{% url 'patient_detail' %}" class="btn btn-primary btn-lg zoomOut" id="button1">View Prescriptions </a>
          {% endif %}
          
        </div>

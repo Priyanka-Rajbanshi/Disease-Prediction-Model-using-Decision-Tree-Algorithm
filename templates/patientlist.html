@@ -77,7 +77,7 @@
             <th scope="col">Patient Name</th>
             <th scope="col">Phone Number</th>
             <th scope="col">Registration Number</th>
-            <th scope="col">Registered Date</th>
+            <th scope="col">Date of Birth</th>
 
             <th scope="col">
             <form class="d-flex" method="post" action="{% url 'searchlist' %}">
@@ -89,23 +89,24 @@
               </form>
               
             </th>
-        </tr>
-        {% if data %}
-                {% for patient in data %}
+        </tr> 
+        {% for patient in patients %}
                 <tr>
-                    <td>{{patient.name}}</td>
-                    <td>{{patient.mobile}}</td>
-                    <td>{{patient.registrationNumber}}</td>
-                    <td>{{patient.createdDate}}</td>
+                    <td>{{ patient.name }}</td>
+                    <td>{{ patient.mobile }}</td>
+                    <td>{{ patient.registrationNumber }}</td>
+                    <td>{{ patient.dateOfBirth }}</td>
                     <td>
-                        <a href="/doctor/patient-list/patient/{{patient.id}}" class="btn btn-info btm-sm">View Records</a>
+                     
+    <a href="{% url 'add_patient_record' patient.id %}" class="btn btn-info btm-sm">Add Record</a>
+
+    <a href="{% url 'view_patient_records' patient.id %}" class="btn btn-info btm-sm">View Records</a>
                         <!-- {% if request.session.role == "Nurse" %}
                             <a href="/healthcare/updatePatientRecord/{{patient.id}}" class="btn btn-info btm-sm">Update</a>
                         {% endif %} -->
                     </td>
                 </tr>
                 {% endfor %}
-            {% endif %}
     </table>
     <!-- style="position:fixed; bottom: 30px; right:35%" -->
     <div class="pagination" style="margin-left: 35%; margin-bottom: 20px;">

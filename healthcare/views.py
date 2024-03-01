@@ -1,16 +1,99 @@
 from datetime import datetime
 import json
 from urllib import response
-from django.shortcuts import render, HttpResponse, redirect
+from django.shortcuts import get_object_or_404, render, HttpResponse, redirect
 import random
-from healthcare.models import Patient, PatientRecord
+from healthcare.models import Patient, PatientRecord, Symptom
 from django.core.mail import send_mail
 import uuid
 from django.conf import settings
+from .forms import PatientForm, PatientRecordForm, RegistrationNumberForm, SymptomForm
 # Create your views here.
-
+from django.http import HttpResponseBadRequest, QueryDict
+from django.urls import reverse
 from accounts.middleware import nurse_middleware,nursedata_middleware
 
+def create_patient(request):
+    if request.method == 'POST':
+        form = PatientForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('patient_list')  # Redirect to a success page
+    else:
+        form = PatientForm()
+    return render(request, 'newpatient.html', {'form': form})
+
+
+def patient_list(request):
+    patients = Patient.objects.all()
+    return render(request, 'patientlist.html', {'patients': patients})
+
+def add_patient_record(request, patient_id):
+    patient = Patient.objects.get(pk=patient_id)
+    
+    if request.method == 'POST':
+        record_form = PatientRecordForm(request.POST)
+        if record_form.is_valid():
+            record = record_form.save(commit=False)
+            record.patientId = patient 
+            record.save()
+            
+            # Process symptoms
+            selected_symptoms = request.POST.getlist('selected_symptoms')  # Use getlist to retrieve multiple values
+            for symptom in selected_symptoms:
+                Symptom.objects.create(name=symptom.strip(), patient=record.patientId)  # Strip to remove extra spaces
+
+            return redirect('patient_list')  # Move this line outside of the loop
+    else:
+        record_form = PatientRecordForm(initial={'patientId': patient})
+
+    return render(request, 'patientRecord.html', {'record_form': record_form, 'patient': patient})
+
+def update_patient_record(request, record_id):
+    record = get_object_or_404(PatientRecord, pk=record_id)
+    
+    if request.method == 'POST':
+        record_form = PatientRecordForm(request.POST, instance=record)
+        if record_form.is_valid():
+            record = record_form.save(commit=False)
+            record.save()
+        
+            selected_symptoms = request.POST.getlist('selected_symptoms')  # Use getlist to retrieve multiple values
+            
+            # Clear existing symptoms for the record
+            Symptom.objects.filter(patient=record.patientId).delete()
+            
+            # Add new symptoms to the record
+            for symptom in selected_symptoms:
+                Symptom.objects.create(name=symptom.strip(), patient=record.patientId)  # Corrected line
+            
+            return redirect(reverse('view_patient_records', kwargs={'patient_id': record.patientId.pk}))# Redirect to appropriate URL after successful update
+    else:
+        record_form = PatientRecordForm(instance=record)
+
+    return render(request, 'updatePatientRecord.html', {'record_form': record_form, 'record': record})
+
+
+
+def patient_detail_view(request):
+    form = RegistrationNumberForm()  # Initialize the form outside the if block
+    
+    if request.method == 'POST':
+        form = RegistrationNumberForm(request.POST)
+        if form.is_valid():
+            registration_number = form.cleaned_data['registration_number']
+            patient = get_object_or_404(Patient, registrationNumber=registration_number)
+            records = PatientRecord.objects.filter(patientId=patient)
+            symptoms = patient.symptoms.all()
+            return render(request, 'viewPatientRecord.html', {'patient': patient, 'records': records, 'symptoms': symptoms})
+    
+    return render(request, 'registrationNo.html', {'form': form})
+# --------------------------------------
+def view_patient_records(request, patient_id):
+    patient = Patient.objects.get(pk=patient_id)
+    records = PatientRecord.objects.filter(patientId=patient)
+    symptoms = patient.symptoms.all()
+    return render(request, 'viewPatientRecord.html', {'patient': patient, 'records': records, 'symptoms': symptoms})
 
 @nurse_middleware
 def newPatient(request):

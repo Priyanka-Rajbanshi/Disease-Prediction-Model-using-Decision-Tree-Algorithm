@@ -152,7 +152,8 @@
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                     <h3 class="register-heading">{{patient.name}}</h3>
-                    <form action="/healthcare/patientRecord/{{patientId}}" method="post">{% csrf_token %}
+                    <form method="post">
+                        {% csrf_token %}
                         <div class="row register-form">
                             <div class="col-md-12">
                                 {% if message %}
@@ -252,15 +253,13 @@
 
                                  <div class="col-md-6">
                                 <div class="form-group">
-                                    <input type="number" class="form-control" name="height" placeholder="Height in cm *"
-                                        value=""  />
+                                    {{ record_form.height }}
                                 </div>
 
                                 <div class="form-group">
-                                    <input type="number" class="form-control" name="weight" placeholder="Weight in kg *"
-                                        value=""  />
+                                    {{ record_form.weight }}
                                 </div>
-                                {% if patient.gender == "Female" %}
+                                <!-- {% if patient.gender == "Female" %}
                                 <div class="form-group">
                                     <select class="form-control" id="preg" name="pregnancyStatus" onClick="isPregnant()"
                                         >
@@ -273,75 +272,64 @@
                                     <input placeholder="Expected Delivery Date*" type="text" name="estimatedDelivery"
                                         class="form-control" onfocus="(this.type='date')" onblur="(this.type='text')" />
                                 </div>
-                                {% endif %}
+                                {% endif %} -->
                                 <div class="form-group">
-                                    <textarea class="form-control" name="allergies" placeholder="Allergies *" rows="5"
-                                        value="" ></textarea>
+                                    {{ record_form.allergies }}
                                 </div>
                                 <div class="form-group">
-                                    <input type="text" class="form-control" name="bloodPressure"
-                                        placeholder="Blood Pressure in mm" value="" step="any"  />
+                                    {{ record_form.bloodPressure }}
                                 </div>
                                 <div class="form-group">
-                                    <input type="number" class="form-control" name="pulseRate"
-                                        placeholder="Pulse Rate in BPM" value="" step="any"  />
+                                    {{ record_form.pulseRate }}
                                 </div>
                                 <div class="form-group">
-                                    <input type="number" class="form-control" name="bodyTemprature"
-                                        placeholder="Body Temprature in (°F) " value="" step="any"  />
+                                    {{ record_form.bodyTemprature }}
+                                       
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group">
-                                    <select class="form-control" name="isAlcolohic" >
-                                        <option class="hidden" value="" selected disabled>Alcoholic</option>
-                                        <option value="Yes">Yes</option>
-                                        <option value="No">No</option>
-                                    </select>
+                                <select class="form-control" name="alcohol">
+                                    <option value="" disabled selected hidden>Alcohol</option>
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                </select>
+                                
 
                                 </div>
                                 <div class="form-group">
-
-                                    <select class="form-control" name="isSmoker" >
-
-                                        <option class="hidden" value="" selected disabled>Smoker</option>
-                                        <option value="Yes">Yes</option>
-                                        <option value="No">No</option>
+                                    <select class="form-control" name="smoke">
+                                        <option value="" disabled selected hidden>Smoke</option>
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
                                     </select>
                                 </div>
 
                                 <div class="form-group">
-                                    <select class="form-control" name="isDiabetic" >
-
-                                        <option class="hidden" value="" selected disabled>Diabetic</option>
-                                        <option value="Yes">Yes</option>
-                                        <option value="No">No</option>
+                                    <select class="form-control" name="diabetic">
+                                        <option value="" disabled selected hidden>Diabetic</option>
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <input type="text" class="form-control" name="insurancePlanName"
-                                        placeholder="Insurance Plan Name*" value="" pattern="[a-zA-Z0-9]*"  />
+                                    {{ record_form.insurancePlanName }}
                                 </div>
                                 <div class="form-group">
-                                    <input type="text" class="form-control" name="insurancePlanNumber"
-                                        placeholder="Insurance Number*" value="" pattern="[a-zA-Z0-9]*"  />
+                                    {{ record_form.insurancePlanNumber }}
                                 </div>
                                 <div class="form-group">
-                                    <textarea class="form-control" name="previousSurgery"
-                                        placeholder="Any Previous Surgery *" rows="5" value="" > </textarea>
-                                </div>
-                                <div class="form-group">
-                                    <select class="form-control" name="status" >
-                                        <option class="hidden" value="" selected disabled>Status</option>
-                                        <option value="Recovered">Recovered</option>
-                                        <option value="Under Treatment">Under Treatment</option>
+                                    <select class="form-control" name="status">
+                                        <option value="" disabled selected hidden>Status</option>
+                                        <option value="recovered">Recovered</option>
+                                        <option value="undertreament">Under Treament</option>
                                     </select>
                                 </div>
                                 <!-- symptoms option -->
                                 <div id="symptoms-container">
                                     <label for="symptoms">Symptoms</label>
                                     <div class="symptom-input">
-                                        <select class="symptom-select">
+                                        <select class="symptom-select" name="selected_symptoms" >
+
                                             <option class="hidden" value="" selected disabled>Select Symptom</option>
                                             <option value="abdominal_pain">Abdominal Pain</option>
 <option value="abnormal_menstruation">Abnormal Menstruation</option>
@@ -480,186 +468,6 @@
                                         <button class="add-symptom">+</button>
                                     </div>
                                 </div>
-
-                                <!-- <script>
-                                    // document.addEventListener('DOMContentLoaded', () => {
-                                    //     const container = document.getElementById('symptoms-container');
-
-                                    //     container.addEventListener('click', (event) => {
-                                    //         if (event.target.classList.contains('add-symptom')) {
-                                    //             const symptomInputs = container.querySelectorAll('.symptom-input');
-                                    //             const lastSymptomInput = symptomInputs[symptomInputs.length - 1];
-                                    document.addEventListener('DOMContentLoaded', () => {
-        let selectedSymptoms = [];
-
-        const container = document.getElementById('symptoms-container');
-
-        container.addEventListener('click', (event) => {
-            if (event.target.classList.contains('add-symptom')) {
-                const symptomSelect = event.target.previousElementSibling;
-                const symptom = symptomSelect.value;
-
-                if (symptom && !selectedSymptoms.includes(symptom)) {
-                    selectedSymptoms.push(symptom);
-                    console.log(selectedSymptoms);
-                }
-
-                const newInput = document.createElement('div');
-                newInput.classList.add('symptom-input');
-                                                newInput.innerHTML = `
-                                                                <select class="symptom-select">
-                                                                    <option class="hidden" value="" selected disabled>Select Symptom</option>
-                                                                    <option value="abdominal_pain">Abdominal Pain</option>
-<option value="abnormal_menstruation">Abnormal Menstruation</option>
-<option value="acidity">Acidity</option>
-<option value="acute_liver_failure">Acute Liver Failure</option>
-<option value="altered_sensorium">Altered Sensorium</option>
-<option value="anxiety">Anxiety</option>
-<option value="back_pain">Back Pain</option>
-<option value="belly_pain">Belly Pain</option>
-<option value="blackheads">Blackheads</option>
-<option value="bladder_discomfort">Bladder Discomfort</option>
-<option value="blister">Blister</option>
-<option value="blood_in_sputum">Blood in Sputum</option>
-<option value="bloody_stool">Bloody Stool</option>
-<option value="blurred_and_distorted_vision">Blurred and Distorted Vision</option>
-<option value="breathlessness">Breathlessness</option>
-<option value="brittle_nails">Brittle Nails</option>
-<option value="bruising">Bruising</option>
-<option value="burning_micturition">Burning Micturition</option>
-<option value="chest_pain">Chest Pain</option>
-<option value="chills">Chills</option>
-<option value="cold_hands_and_feets">Cold Hands and Feets</option>
-<option value="coma">Coma</option>
-<option value="congestion">Congestion</option>
-<option value="constipation">Constipation</option>
-<option value="continuous_feel_of_urine">Continuous Feel of Urine</option>
-<option value="continuous_sneezing">Continuous Sneezing</option>
-<option value="cough">Cough</option>
-<option value="cramps">Cramps</option>
-<option value="dark_urine">Dark Urine</option>
-<option value="dehydration">Dehydration</option>
-<option value="depression">Depression</option>
-<option value="diarrhoea">Diarrhoea</option>
-<option value="dischromic_patches">Dischromic Patches</option>
-<option value="distention_of_abdomen">Distention of Abdomen</option>
-<option value="dizziness">Dizziness</option>
-<option value="drying_and_tingling_lips">Drying and Tingling Lips</option>
-<option value="enlarged_thyroid">Enlarged Thyroid</option>
-<option value="excessive_hunger">Excessive Hunger</option>
-<option value="extra_marital_contacts">Extra Marital Contacts</option>
-<option value="family_history">Family History</option>
-<option value="fast_heart_rate">Fast Heart Rate</option>
-<option value="fatigue">Fatigue</option>
-<option value="fluid_overload">Fluid Overload</option>
-<option value="foul_smell_of_urine">Foul Smell of Urine</option>
-<option value="headache">Headache</option>
-<option value="high_fever">High Fever</option>
-<option value="hip_joint_pain">Hip Joint Pain</option>
-<option value="history_of_alcohol_consumption">History of Alcohol Consumption</option>
-<option value="increased_appetite">Increased Appetite</option>
-<option value="indigestion">Indigestion</option>
-<option value="inflammatory_nails">Inflammatory Nails</option>
-<option value="internal_itching">Internal Itching</option>
-<option value="irregular_sugar_level">Irregular Sugar Level</option>
-<option value="irritability">Irritability</option>
-<option value="irritation_in_anus">Irritation in Anus</option>
-<option value="itching">Itching</option>
-<option value="joint_pain">Joint Pain</option>
-<option value="knee_pain">Knee Pain</option>
-<option value="lack_of_concentration">Lack of Concentration</option>
-<option value="lethargy">Lethargy</option>
-<option value="loss_of_appetite">Loss of Appetite</option>
-<option value="loss_of_balance">Loss of Balance</option>
-<option value="loss_of_smell">Loss of Smell</option>
-<option value="malaise">Malaise</option>
-<option value="mild_fever">Mild Fever</option>
-<option value="mood_swings">Mood Swings</option>
-<option value="movement_stiffness">Movement Stiffness</option>
-<option value="mucoid_sputum">Mucoid Sputum</option>
-<option value="muscle_pain">Muscle Pain</option>
-<option value="muscle_wasting">Muscle Wasting</option>
-<option value="muscle_weakness">Muscle Weakness</option>
-<option value="nausea">Nausea</option>
-<option value="neck_pain">Neck Pain</option>
-<option value="nodal_skin_eruptions">Nodal Skin Eruptions</option>
-<option value="obesity">Obesity</option>
-<option value="pain_behind_the_eyes">Pain Behind the Eyes</option>
-<option value="pain_during_bowel_movements">Pain During Bowel Movements</option>
-<option value="pain_in_anal_region">Pain in Anal Region</option>
-<option value="painful_walking">Painful Walking</option>
-<option value="palpitations">Palpitations</option>
-<option value="passage_of_gases">Passage of Gases</option>
-<option value="patches_in_throat">Patches in Throat</option>
-<option value="phlegm">Phlegm</option>
-<option value="polyuria">Polyuria</option>
-<option value="prognosis">Prognosis</option>
-<option value="prominent_veins_on_calf">Prominent Veins on Calf</option>
-<option value="puffy_face_and_eyes">Puffy Face and Eyes</option>
-<option value="pus_filled_pimples">Pus Filled Pimples</option>
-<option value="receiving_blood_transfusion">Receiving Blood Transfusion</option>
-<option value="receiving_unsterile_injections">Receiving Unsterile Injections</option>
-<option value="red_sore_around_nose">Red Sore Around Nose</option>
-<option value="red_spots_over_body">Red Spots Over Body</option>
-<option value="redness_of_eyes">Redness of Eyes</option>
-<option value="restlessness">Restlessness</option>
-<option value="runny_nose">Runny Nose</option>
-<option value="rusty_sputum">Rusty Sputum</option>
-<option value="scurring">Scurring</option>
-<option value="shivering">Shivering</option>
-<option value="silver_like_dusting">Silver Like Dusting</option>
-<option value="sinus_pressure">Sinus Pressure</option>
-<option value="skin_peeling">Skin Peeling</option>
-<option value="skin_rash">Skin Rash</option>
-<option value="slurred_speech">Slurred Speech</option>
-<option value="small_dents_in_nails">Small Dents in Nails</option>
-<option value="spinning_movements">Spinning Movements</option>
-<option value="spotting_urination">Spotting Urination</option>
-<option value="stiff_neck">Stiff Neck</option>
-<option value="stomach_bleeding">Stomach Bleeding</option>
-<option value="stomach_pain">Stomach Pain</option>
-<option value="sunken_eyes">Sunken Eyes</option>
-<option value="sweating">Sweating</option>
-<option value="swelled_lymph_nodes">Swelled Lymph Nodes</option>
-<option value="swelling_joints">Swelling Joints</option>
-<option value="swelling_of_stomach">Swelling of Stomach</option>
-<option value="swollen_blood_vessels">Swollen Blood Vessels</option>
-<option value="swollen_extremeties">Swollen Extremeties</option>
-<option value="swollen_legs">Swollen Legs</option>
-<option value="throat_irritation">Throat Irritation</option>
-<option value="toxic_look_(typhos)">Toxic Look (Typhos)</option>
-<option value="ulcers_on_tongue">Ulcers on Tongue</option>
-<option value="unsteadiness">Unsteadiness</option>
-<option value="visual_disturbances">Visual Disturbances</option>
-<option value="vomiting">Vomiting</option>
-<option value="watering_from_eyes">Watering from Eyes</option>
-<option value="weakness_in_limbs">Weakness in Limbs</option>
-<option value="weakness_of_one_body_side">Weakness of One Body Side</option>
-<option value="weight_gain">Weight Gain</option>
-<option value="weight_loss">Weight Loss</option>
-<option value="yellow_crust_ooze">Yellow Crust Ooze</option>
-<option value="yellow_urine">Yellow Urine</option>
-<option value="yellowing_of_eyes">Yellowing of Eyes</option>
-<option value="yellowish_skin">Yellowish Skin</option>
-
-
-                                                                </select>
-                                                                <button class="add-symptom">+</button>
-                                                            `;
-                                                            container.appendChild(newInput);
-                event.target.remove();
-            }
-        });
-
-        // Store selectedSymptoms in session storage
-        sessionStorage.setItem('selectedSymptoms', JSON.stringify(selectedSymptoms));
-
-    });
-    console.log("symptoms22" + selectedSymptoms);
-</script>
-
-<a href="{% url 'pred' %}" class="btnRegister">Register</a> -->
-
 <a href="{% url 'pred' %}" id="register-link">Register</a>
 
                             
@@ -674,7 +482,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (symptom && !selectedSymptoms.includes(symptom)) {
             selectedSymptoms.push(symptom);
-            sessionStorage.setItem('selectedSymptoms', JSON.stringify(selectedSymptoms)); // Store in session storage
+            sessionStorage.setItem('selectedSymptoms', JSON.stringify(selectedSymptoms)); // Store in session storage -->
             console.log("Selected Symptoms:", selectedSymptoms);
         }
     }
@@ -687,7 +495,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const newInput = document.createElement('div');
             newInput.classList.add('symptom-input');
             newInput.innerHTML = `
-            <select class="symptom-select">
+            <select class="symptom-select" name="selected_symptoms" >
             <option class="hidden" value="" selected disabled>Select Symptom</option>
             <option value="abdominal_pain">Abdominal Pain</option>
             <option value="abnormal_menstruation">Abnormal Menstruation</option>
@@ -850,12 +658,12 @@ registerLink.addEventListener('click', (event) => {
 
 
 });
-</script>
-                                <!-- <input type="submit" class="btnRegister" value="Register" /> -->
-                                <!-- <a href="{% url 'pred' %}" class="btnRegister">Register</a> -->
+</script> 
                                 
                                                             </div>
                         </div>
+
+                        <button type="submit">Create</button>
                     </form>
                 </div>
             </div>
