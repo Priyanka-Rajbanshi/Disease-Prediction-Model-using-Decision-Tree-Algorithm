@@ -141,26 +141,32 @@
                                                 {{ diagnosis_form.dateOfOnset }}
                                             </div>                                           
                                             <div class="form-group">
+                                               
                                                 <select class="form-control" name="severity">
-                                                    <option class="hidden"  selected disabled>Severity</option>
-                                                    <option value=" acute ">acute </option>
-                                                    <option value=" chronic">chronic</option>
+                                                    <option value="" disabled hidden>Select Severity</option>
+                                                    <option value="acute" {% if diagnosis_form.instance.severity == 'acute' %} selected {% endif %}>Acute</option>
+                                                    <option value="chronic" {% if diagnosis_form.instance.severity == 'chronic' %} selected {% endif %}>Chronic</option>
                                                 </select>
+                                            </div>
+        
                                             </div> 
                                             <div class="form-group">
                                                 {{ diagnosis_form.dateOfAbatement }}
                                             </div>                                                                               
                                             <div class="form-group">
+                                               
                                                 <select class="form-control" name="diagnosisCertainity">
-                                                    <option class="hidden"  selected disabled>Certainity</option>
-                                                    <option value="suspected ">suspected </option>
-                                                    <option value="confirmed">confirmed</option>
+                                                    <option value="" disabled hidden>Select Certainty</option>
+                                                    <option value="suspected" {% if diagnosis_form.instance.diagnosisCertainity == 'suspected' %} selected {% endif %}>Suspected</option>
+                                                    <option value="confirmed" {% if diagnosis_form.instance.diagnosisCertainity == 'confirmed' %} selected {% endif %}>Confirmed</option>
                                                 </select>
-                                            </div>    
+                                            </div>
+                                              
                                             <div class="form-group">
                                                 {{ diagnosis_form.diagnosisDescription }}
                                             </div>
                                         </div>
+                                        
                                                 <div class="col-md-6">
                                                     <h5>Any Medical Device</h5>
                                                     <hr>

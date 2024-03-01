@@ -99,9 +99,15 @@
                     <td>
                      
     <a href="{% url 'add_patient_record' patient.id %}" class="btn btn-info btm-sm">Add Record</a>
-
     <a href="{% url 'view_patient_records' patient.id %}" class="btn btn-info btm-sm">View Records</a>
+
+    <a href="{% url 'add_medicine' patient.id %}" class="btn btn-info btm-sm">Add Medicine</a>
+    <a href="{% url 'patient_medicine' patient.id %}" class="btn btn-info btm-sm">View Medicine</a>
+    <a href="{% url 'add_diagnosis' patient.id %}" class="btn btn-info btm-sm">Add Diagnosis</a>
+    <a href="{% url 'view_diagnosis' patient.id %}" class="btn btn-info btm-sm">View Diagnosis</a>
+
                         <!-- {% if request.session.role == "Nurse" %}
+                            
                             <a href="/healthcare/updatePatientRecord/{{patient.id}}" class="btn btn-info btm-sm">Update</a>
                         {% endif %} -->
                     </td>

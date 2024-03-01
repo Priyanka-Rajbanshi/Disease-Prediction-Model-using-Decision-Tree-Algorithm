@@ -1,5 +1,5 @@
 from django.core.checks import messages
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.http import HttpResponse, response
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
@@ -271,3 +271,98 @@ def medication(request, prescriptionId):
         allMeds = Medicine.objects.all()
         return render(request, "medicationPage.html",{'prescriptionId':prescriptionId,'allMeds':allMeds,'message':"Please Fill All The Required Details!"})
 
+# ------------------------------------------------------------------------
+
+
+from django.shortcuts import render, redirect
+from .models import MedicineDirection, Patient
+from .forms import DiagnosisForm, MedicalDeviceForm, MedicineDirectionForm
+
+def add_medicine(request, patient_id):
+    patient = Patient.objects.get(pk=patient_id)
+    if request.method == 'POST':
+        form = MedicineDirectionForm(request.POST)
+        if form.is_valid():
+            medicine_direction = form.save(commit=False)
+            medicine_direction.patientId = patient  # Note: patientId should be set as patient object, not patient_id
+            medicine_direction.save()
+            return redirect('patient_list')  # Redirect to a success URL
+    else:
+        form = MedicineDirectionForm()  # No need to pass patient here
+    return render(request, 'medicationPage.html', {'form': form, 'patient': patient})
+
+def update_medicine(request, patient_id, medicine_id):
+    patient = get_object_or_404(Patient, pk=patient_id)
+    medicine_direction = get_object_or_404(MedicineDirection, pk=medicine_id)
+    
+    if request.method == 'POST':
+        form = MedicineDirectionForm(request.POST, instance=medicine_direction)
+        if form.is_valid():
+            form.save()
+            return redirect('patient_list')  # Redirect to a success URL
+    else:
+        form = MedicineDirectionForm(instance=medicine_direction)
+    return render(request, 'update_medicine.html', {'form': form, 'patient': patient})
+
+def patient_medicine(request, patient_id):
+    patient = get_object_or_404(Patient, pk=patient_id)
+    medicines = MedicineDirection.objects.filter(patientId=patient)
+    return render(request, 'viewMedicine.html', {'patient': patient, 'medicines': medicines})
+
+
+def add_diagnosis(request, patient_id):
+    patient = Patient.objects.get(pk=patient_id)
+    if request.method == 'POST':
+        diagnosis_form = DiagnosisForm(request.POST)
+        device_form = MedicalDeviceForm(request.POST)
+        if diagnosis_form.is_valid() and device_form.is_valid():
+            diagnosis = diagnosis_form.save(commit=False)
+            diagnosis.patientId = patient  # Assign patient to the diagnosis object
+            diagnosis.save()
+            device = device_form.save(commit=False)
+            device.patientId = patient  # Assign patient to the device object
+            device.save()
+            return redirect('patient_list')  # Redirect to patient detail page
+    else:
+        diagnosis_form = DiagnosisForm()
+        device_form = MedicalDeviceForm()  # Don't pass patient to the form
+    return render(request, 'diagnosisPage.html', {'diagnosis_form': diagnosis_form, 'device_form': device_form, 'patient': patient})
+
+def view_diagnosis(request, patient_id):
+    patient = Patient.objects.get(pk=patient_id)
+    diagnoses = Diagnosis.objects.filter(patientId=patient)
+    medical_devices = MedicalDevice.objects.filter(patientId=patient)
+    return render(request, 'diagnosisDescription.html', {'patient': patient, 'diagnoses': diagnoses, 'medical_devices': medical_devices})
+
+def update_diagnosis(request, patient_id):
+    patient = Patient.objects.get(pk=patient_id)
+    diagnosis = Diagnosis.objects.filter(patientId=patient).first()
+    device = MedicalDevice.objects.filter(patientId=patient).first()
+    
+    if request.method == 'POST':
+        diagnosis_form = DiagnosisForm(request.POST, instance=diagnosis)
+        device_form = MedicalDeviceForm(request.POST, instance=device)
+        
+        print("POST data:", request.POST)  # Debugging
+        
+        if diagnosis_form.is_valid() and device_form.is_valid():
+            diagnosis = diagnosis_form.save(commit=False)
+            diagnosis.patientId = patient
+            diagnosis.save()
+            
+            device = device_form.save(commit=False)
+            device.patientId = patient
+            device.save()
+            
+            print("Diagnosis:", diagnosis)  # Debugging
+            print("Device:", device)  # Debugging
+            
+            return redirect('view_diagnosis', patient_id=patient_id)
+        else:
+            print("Diagnosis form errors:", diagnosis_form.errors)  # Debugging
+            print("Device form errors:", device_form.errors)  # Debugging
+    else:
+        diagnosis_form = DiagnosisForm(instance=diagnosis)
+        device_form = MedicalDeviceForm(instance=device)
+        
+    return render(request, 'updatediagonis.html', {'diagnosis_form': diagnosis_form, 'device_form': device_form, 'patient': patient})

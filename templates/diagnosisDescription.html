@@ -146,6 +146,10 @@
                 <li class="nav-item"  data-tab-target="#MedicalHistory">
                     <a class="nav-link active" href="#" style="background-color: #2f92ad;" >Device Details</a>
                   </li>
+                  <li class="nav-item" ></li>
+                  <a class="nav-link active" href="{% url 'update_diagnosis' patient_id=patient.id %} " style="background-color: #2f92ad;">Update Diagnosis</a>
+                 
+                </li>
                   {% if data.laboratoryTest|length %}
                     <li class="nav-item" data-tab-target="#Prescriptions">
                       <a class="nav-link active" href="#" style="background-color: #2f92ad;" >Tests</a>
@@ -173,74 +177,79 @@
                 {% else %}
                 <h1>Diagnosis Details</h1>
               {% endif %}
+              
                 <div class="card-body pt-0" id="table1">
+                  {% for diagnosis in diagnoses %}
                     <table class="table table-bordered" >
                         <tr>
                             <th width="30%"> Diagnosis Name</th>
                             <td width="2%">:</td>
-                            <td>{{data.diagnosis.diagnosisName}}</td>
+                            <td>{{ diagnosis.diagnosisName }}</td>
                           </tr>
                           <tr>
                             <th width="30%">Diagnosis Body Part</th>
                             <td width="2%">:</td>
-                            <td>{{data.diagnosis.diagnosisBodySite}}</td>
+                            <td>{{diagnosis.diagnosisBodySite}}</td>
                           </tr>
                           
                           <tr>
                             <th width="30%">Onset Date</th>
                             <td width="2%">:</td>
-                            <td>{{data.diagnosis.dateOfOnset}}</td>
+                            <td>{{diagnosis.dateOfOnset}}</td>
                           </tr>
         
                           <tr>
                             <th width="30%">Severity</th>
                             <td width="2%">:</td>
-                            <td>{{data.diagnosis.severity}}</td>
+                            <td>{{diagnosis.severity}}</td>
                           </tr>
                           <tr>
                             <th width="30%">Abatement Date</th>
                             <td width="2%">:</td>
-                            <td>{{data.diagnosis.dateOfAbatement}}</td>
+                            <td>{{diagnosis.dateOfAbatement}}</td>
                           </tr>
                           <tr>
                             <th width="30%">Diagnosis Certainity</th>
                             <td width="2%">:</td>
-                            <td>{{data.diagnosis.diagnosisCertainity}}</td>
+                            <td>{{diagnosis.diagnosisCertainity}}</td>
                           </tr>
                           <tr>
                             <th width="30%">Diagnosis Description</th>
                             <td width="2%">:</td>
-                            <td>{{data.diagnosis.diagnosisDescription}}</td>
+                            <td>{{diagnosis.diagnosisDescription}}</td>
                           </tr>
                     </table>
+                    {% endfor %}
                   </div>
 
             </div>
             <div id="MedicalHistory" data-tab-content>
                 <h1>Device Details</h1>
                 <div class="card-body pt-0" id="table2">
+                  {% for device in medical_devices %}
                     <table class="table table-bordered">
                         <tr>
                             <th width="30%">Medical Device Used</th>
                             <td width="2%">:</td>
-                            <td>{{data.medicalDevice.deviceName}}</td>
+                            <td>{{device.deviceName}}</td>
                           </tr>
                           <tr>
                             <th width="30%">Device Body Site</th>
                             <td width="2%">:</td>
-                            <td>{{data.medicalDevice.deviceBodySite}}</td>
+                            <td>{{device.deviceBodySite}}</td>
                           </tr>
                           <tr>
                             <th width="30%">Use For</th>
                             <td width="2%">:</td>
-                            <td>{{data.medicalDevice.deviceUse}}</td>
+                            <td>{{device.deviceUse}}</td>
                           </tr>
                           <tr>
                             <th width="30%">Device Description</th>
                             <td width="2%">:</td>
-                            <td>{{data.medicalDevice.deviceDscription}}</td>
+                            <td>{{device.deviceDescription}}</td>
                           </tr>
                     </table>
+                    {% endfor %}
                   </div>
             </div>
             <div id="Prescriptions" data-tab-content>

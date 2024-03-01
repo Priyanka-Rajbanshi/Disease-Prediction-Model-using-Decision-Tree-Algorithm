@@ -12,17 +12,32 @@
           .zoomOut:hover{
             transform: scale(1.2);
           }
-         
+          .nav-link {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    color: #fff;
+    text-decoration: none;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out;
+    margin-left: 16px;
+}
 
     </style>
 </head>
 <body>
+
     <div id="medicineDetails">
-        
-        <div id="table">
+
+  {% for medicine_direction in medicines %}
+    <!-- Display medicine information -->
+    <a class="nav-link active" href="{% url 'update_medicine' patient_id=patient.id medicine_id=medicine_direction.id %}"style="background-color: #2f92ad;">Edit</a>
+{% endfor %}
+
+   
+  <div id="table">
+          {% for medicine in medicines %}
             <h1 style="padding-left: 10px;">
                 <hr style="color: #2f92ad;">
-                {{medicineDetails.name}}
+                
                 
                     <a href="/doctor/viewPrescription/{{ prescriptionId }}" style="float: right; margin-right:15px; "><i class="fas fa-caret-square-left fa-lg zoomOut" style="color: #2f92ad; ;"></i></a>
 
@@ -31,65 +46,44 @@
             <div class="card-body pt-0" id="table1">
                 <table class="table table-bordered" >
                   <tr>
-                    <th width="30%">form</th>
+                    <th width="30%">Name of Medicine</th>
                     <td width="2%">:</td>
-                    <td>{{medicineDetails.form}}</td>
+                    <td>{{ medicine.medicineId }} </td>
                   </tr>
                   
                   <tr>
-                    <th width="30%">category</th>
+                    <th width="30%">DoseUnit</th>
                     <td width="2%">:</td>
-                    <td>{{medicineDetails.category}}</td>
+                    <td>{{ medicine.doseUnit }}</td>
                   </tr>
 
                   <tr>
-                    <th width="30%">Strength</th>
+                    <th width="30%">Duration</th>
                     <td width="2%">:</td>
-                    <td>{{medicineDetails.strength}}</td>
+                    <td>{{ medicine.duration }}</td>
                   </tr>
                   <tr>
-                    <th width="30%">concentration</th>
+                    <th width="30%">Number Of Times</th>
                     <td width="2%">:</td>
-                    <td>{{medicineDetails.concentration}}</td>
+                    <td>{{ medicine.doseTiming }}</td>
                   </tr>
                   <tr>
-                    <th width="30%">Unit Of Prepartion</th>
+                    <th width="30%">Instruction</th>
                     <td width="2%">:</td>
-                    <td>{{medicineDetails.unitOfPreparation}}</td>
+                    <td>{{ medicine.additionalInstruction }}</td>
                   </tr>
                   <tr>
-                    <th width="30%">Manufacturer</th>
+                    <th width="30%">Reason</th>
                     <td width="2%">:</td>
-                    <td>{{medicineDetails.manufacturer}}</td>
+                    <td>{{ medicine.reason }}</td>
                   </tr>
-                  <tr>
-                    <th width="30%">Expiry Date</th>
-                    <td width="2%">:</td>
-                    <td>{{medicineDetails.expiryDate}}</td>
-                  </tr>
-                  <tr>
-                    <th width="30%">Amount</th>
-                    <td width="2%">:</td>
-                    <td>{{medicineDetails.amount}}</td>
-                  </tr>
-                  <tr>
-                    <th width="30%">Role</th>
-                    <td width="2%">:</td>
-                    <td>{{medicineDetails.role}}</td>
-                  </tr>
-                  <tr>
-                    <th width="30%">Description</th>
-                    <td width="2%">:</td>
-                    <td>{{medicineDetails.description}}</td>
-                  </tr>
-
                 </table>
               </div>
 
-
+              {% endfor %}
         </div>
 
-
+       
     </div>
 
     

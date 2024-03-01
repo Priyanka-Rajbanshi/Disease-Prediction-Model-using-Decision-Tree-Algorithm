@@ -17,7 +17,30 @@ class Medicine(models.Model):
     amount = models.CharField(max_length=200)
     role = models.CharField(max_length=100)
     description = models.TextField()
+
+# -------------------------------------------------------------------------------------
+
+class MedicineDirection(models.Model):
+    patientId = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    medicineId =models.CharField(max_length=100)
+    doseUnit = models.CharField(max_length=100)
+    duration = models.CharField(max_length=100)
+    doseTiming = models.CharField(max_length=100)
+    additionalInstruction = models.TextField()
+    reason = models.TextField()
+
+
+class LaboratoryTest(models.Model):
+    patientId = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    testName = models.CharField(max_length=200)
+    testSpecimen = models.CharField(max_length=100)
+    testBodySite = models.CharField(max_length=200)
+    testUse = models.CharField(max_length=100)
+    testDescription = models.CharField(max_length=100)
+    testReport = models.CharField(max_length=1000)
+
 class Diagnosis(models.Model):
+    patientId = models.ForeignKey(Patient, on_delete=models.CASCADE)
     diagnosisName = models.CharField(max_length=200)
     diagnosisBodySite = models.CharField(max_length=100)
     dateOfOnset = models.DateField()
@@ -26,29 +49,21 @@ class Diagnosis(models.Model):
     diagnosisCertainity= models.CharField(max_length=100)
     diagnosisDescription  = models.TextField()
     createdDate  = models.DateField(default=datetime.datetime.now)
+
 class MedicalDevice(models.Model):
+    patientId = models.ForeignKey(Patient, on_delete=models.CASCADE)
     deviceName = models.CharField(max_length=200)
     deviceBodySite = models.CharField(max_length=200)
     deviceUse = models.CharField(max_length=100)
-    deviceDscription = models.CharField(max_length=100)
-class LaboratoryTest(models.Model):
-    testName = models.CharField(max_length=200)
-    testSpecimen = models.CharField(max_length=100)
-    testBodySite = models.CharField(max_length=200)
-    testUse = models.CharField(max_length=100)
-    testDescription = models.CharField(max_length=100)
-    testReport = models.CharField(max_length=1000)
+    deviceDescription = models.CharField(max_length=100)  # Corrected field name
+
+# --------------------------------------------------------------------------------------------------
+
 class Prescription(models.Model):
     patientId = models.ForeignKey(Patient, on_delete=models.CASCADE)
     diagnosisId = models.ForeignKey(Diagnosis, on_delete=models.CASCADE)
     medicalDevice = models.ForeignKey(MedicalDevice, on_delete=models.CASCADE)
-class MedicineDirection(models.Model):
-    medicineId = models.ForeignKey(Medicine, on_delete=models.CASCADE)
-    doseUnit = models.CharField(max_length=100)
-    duration = models.CharField(max_length=100)
-    doseTiming = models.CharField(max_length=100)
-    additionalInstruction = models.TextField()
-    reason = models.TextField()
+
 class MedicineDirPrescriptionMap(models.Model):
     prescriptionId = models.ForeignKey(Prescription, on_delete=models.CASCADE)
     medicineDirectionId = models.ForeignKey(MedicineDirection, on_delete=models.CASCADE)

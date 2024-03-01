@@ -116,8 +116,8 @@
                     <div class="col-md-9 register-right">
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                                <h3 class="register-heading">Add Medicine</h3>
-                                <form method="post" action="{% url 'add_medicine' patient.id %}">
+                                <h3 class="register-heading">Update Medicine</h3>
+                                <form method="post">
                                     {% csrf_token %}
                                     <div class="row register-form">
                                         <div class="col-md-12">
